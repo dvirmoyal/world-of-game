@@ -1,3 +1,37 @@
+# Overall System Architecture
+
+```mermaid
+graph TB
+    subgraph "Network Layer"
+        LB[LoadBalancer Service] --> APP[Flask App Service]
+        style LB fill:#87CEEB
+    end
+
+    subgraph "Application Layer"
+        APP --> POD[Flask App Pod]
+        POD --> SEC[Registry Secret]
+        style APP fill:#90EE90
+        style POD fill:#90EE90
+        style SEC fill:#FFB6C1
+    end
+
+    subgraph "Database Layer"
+        POD --> MYSQL[Bitnami MySQL]
+        MYSQL --> CONF[Init ConfigMap]
+        MYSQL --> S1[Root Password Secret]
+        MYSQL --> S2[User Credentials Secret]
+        style MYSQL fill:#DDA0DD
+        style CONF fill:#F0E68C
+        style S1 fill:#FFB6C1
+        style S2 fill:#FFB6C1
+    end
+
+    subgraph "Storage Layer"
+        MYSQL --> PV[Persistent Volume]
+        style PV fill:#98FB98
+    end
+```
+
 # MySQL Configuration and User Permissions
 
 ## ConfigMap Configuration
