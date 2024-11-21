@@ -21,15 +21,24 @@ spec:
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           env:
-            - name: SPRING_DATASOURCE_URL
-              value: {{ include "my-dvir-app.fullMySQLConnectionURL" . | quote }}
-            - name: SPRING_DATASOURCE_USERNAME
+            - name: MYSQL_HOST
+              value: "my-app-mysql.dvir-app.svc.cluster.local"
+            - name: MYSQL_USER
               valueFrom:
                 secretKeyRef:
                   name: {{ .Release.Name }}-mysql-username
                   key: username
-            - name: SPRING_DATASOURCE_PASSWORD
+            - name: MYSQL_PASSWORD
               valueFrom:
                 secretKeyRef:
                   name: {{ .Release.Name }}-mysql-password
                   key: password
+            - name: MYSQL_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Release.Name }}-mysql-root-password
+                  key: password
+            - name: MYSQL_DATABASE
+              value: "world-of-game"
+            - name: MYSQL_PORT
+              value: "3306"
