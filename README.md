@@ -1,15 +1,16 @@
-# Python Application with Local Kubernetes Deployment
+# World of Games - Flask Application
 
 ## Project Overview
-Extended CI/CD pipeline that builds a Python application, pushes to GHCR, and deploys to a local Kubernetes cluster using Helm charts with a self-hosted GitHub Actions runner.
+A Flask-based gaming platform with MySQL database integration, containerized and deployed to Kubernetes using Helm. The application allows users to register, choose games, and track player activities.
 
 ## Architecture Flow
 ```mermaid
 graph LR;
     subgraph "CI Process (Cloud Runner)"
-        A[Python App] --> B[Docker Image]
-        B --> C[Build Process]
+        A[Flask App] --> B[Dependencies]
+        B --> C[Docker Build]
         C --> D[Push to GHCR]
+        
         style A fill:#90EE90
         style B fill:#87CEEB
         style C fill:#FFB6C1
@@ -17,13 +18,16 @@ graph LR;
     end
 
     subgraph "CD Process (Self-Hosted Runner)"
-        E[Pull from GHCR] --> F[Helm Chart]
-        F --> G[Template Rendering]
-        G --> H[Deploy to Local K8s]
+        E[Pull from GHCR] --> F[Helm Deploy]
+        F --> G[K8s Cluster]
+        G --> H[App Pod]
+        H --> I[(MySQL DB)]
+        
         style E fill:#F0E68C
         style F fill:#FFA07A
-        style G fill:#DDA0DD
-        style H fill:#98FB98
+        style G fill:#98FB98
+        style H fill:#DDA0DD
+        style I fill:#B8860B
     end
 
     D --> E
@@ -42,111 +46,136 @@ project-root/
 │       ├── deployment.yaml
 │       ├── service.yaml
 │       └── _helpers.tpl
-├── app.py                 # Python application
-├── Dockerfile            # Container definition
+├── app.py                 # Main Flask application
+├── live.py               # Game logic and welcome messages
+├── MainGame.py           # Game implementation
+├── requirements.txt      # Python dependencies
+├── Dockerfile           # Container definition
 └── README.md
 ```
 
-## CI/CD Pipeline Stages
+## Application Components
 
-### 1. Build Stage (Cloud Runner)
-- Checkout code
-- Setup Python environment
-- Build Docker image
-- Push to GHCR
-- Create GitHub Release
+### Flask Application
+- Web interface for game selection
+- Player registration and tracking
+- Database integration for player data
+- Game difficulty selection
+- Multiple game options:
+  1. Memory Game
+  2. Guess Game
+  3. Currency Roulette
 
-### 2. Deployment Stage (Self-Hosted Runner)
-- Pull image from GHCR
-- Configure Helm
-- Update chart values
-- Deploy to local Kubernetes cluster
-- Verify deployment
+### Database Schema
+```sql
+CREATE TABLE players (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+```
 
-## Local Environment Setup
+## Docker Configuration
+```dockerfile
+FROM python:3.9-slim
+WORKDIR /app
+COPY . /app
+RUN apt-get update && apt-get install -y \
+    default-libmysqlclient-dev \
+    build-essential \
+    && rm -rf /var/lib/apt/lists/*
+RUN pip install --no-cache-dir flask mysql-connector-python
+EXPOSE 5000
+ENV FLASK_APP=app.py
+ENV FLASK_RUN_HOST=0.0.0.0
+CMD ["flask", "run"]
+```
 
-### Prerequisites
-- Kubernetes cluster (Minikube/Kind)
-- Helm
-- GitHub Actions self-hosted runner
-- Docker
-- PowerShell
+## Deployment Configuration
 
-### Self-Hosted Runner Setup
-1. Add runner to GitHub repository
-2. Configure runner on local machine
-3. Ensure runner has access to:
-   - kubectl
-   - helm
-   - docker
-   - PowerShell
-
-## Helm Deployment
-
-### Chart Configuration
+### Environment Variables
 ```yaml
-# values.yaml defaults
-image:
-  repository: ghcr.io/username/image
-  tag: latest
-replicaCount: 2
-nameOverride: world-of-games
-namespace: dvir-app
+# Required environment variables
+MYSQL_HOST: "127.0.0.1"
+MYSQL_USER: "root"
+MYSQL_PASSWORD: "root"
+MYSQL_DATABASE: "sys"
+MYSQL_PORT: "3306"
 ```
 
-### Deployment Commands
+### Helm Deployment
 ```powershell
-# Template rendering
-helm template my-app ./my-chart --debug \
-  --set image.repository=$imageRepository \
-  --set image.tag=$imageTag
-
-# Installation/Upgrade
-helm upgrade -i my-app ./my-chart --debug \
-  --set image.repository=$imageRepository \
-  --set image.tag=$imageTag
+helm upgrade -i my-app ./ --namespace dvir-app --debug \
+  --set image.repository=ghcr.io/dvirmoyal/dvir-demo \
+  --set image.tag=$IMAGE_TAG \
+  --set replicaCount=2 \
+  --set nameOverride=world-of-games
 ```
 
-## Required Secrets
-- `GITHUB_TOKEN`: For GHCR access
-- `PAT_GHCR`: Personal Access Token
+## API Endpoints
 
-## Verification
+### Main Routes
+- `/`: Welcome page
+- `/welcome`: Player registration
+- `/game`: Game selection interface
+- `/players`: Player history
+- `/test_db_connection`: Database connection test
+
+## Local Development
+1. Install dependencies:
 ```bash
-# Check deployment status
-kubectl get pods -n dvir-app
-kubectl get services -n dvir-app
+pip install flask mysql-connector-python
 ```
 
-## Troubleshooting
+2. Set up MySQL:
+```bash
+# Ensure MySQL is running locally
+mysql -u root -p
+# Create required database and user
+```
 
-### Common Issues
-1. **Self-Hosted Runner Connection**
-   - Verify runner is online
-   - Check runner permissions
-   - Ensure required tools are installed
+3. Run the application:
+```bash
+flask run
+```
 
-2. **Helm Deployment**
-   - Validate chart syntax
-   - Check namespace exists
-   - Verify image pull credentials
+## Deployment Process
 
-3. **Kubernetes Deployment**
-   - Check pod status
-   - View pod logs
-   - Verify service configuration
+### CI Stage (Cloud Runner)
+1. Build Python application with dependencies
+2. Create Docker image with MySQL client
+3. Push to GHCR
 
-## Monitoring
-- GitHub Actions workflow logs
-- Kubernetes dashboard
-- Pod logs and events
+### CD Stage (Self-Hosted Runner)
+1. Pull latest image
+2. Deploy using Helm
+3. Verify database connection
+4. Confirm application availability
 
-## Branch Strategy
-- `v1.0.0`: Basic CI with GHCR
-- `v2.0.0`: Helm deployment with self-hosted runner
+## Monitoring & Troubleshooting
+
+### Application Logs
+```bash
+# Get pod name
+kubectl get pods -n dvir-app
+
+# View logs
+kubectl logs <pod-name> -n dvir-app
+```
+
+### Database Connection
+```bash
+# Test database connection
+curl http://<service-ip>/test_db_connection
+```
+
+## Version History
+- v2.0.0: Flask application with MySQL integration
+- v1.0.0: Basic Python application
 
 ## Next Steps
-- Add monitoring and logging
-- Implement health checks
-- Configure auto-scaling
-- Add deployment environments
+- Add user authentication
+- Implement game statistics
+- Add high score system
+- Enhance database schema
+- Add monitoring and metrics
