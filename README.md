@@ -2,34 +2,48 @@
 
 ```mermaid
 graph TB
-    subgraph "Network Layer"
-        LB[LoadBalancer Service] --> APP[Flask App Service]
-        style LB fill:#87CEEB
+    subgraph "CI Process (Cloud Runner)"
+        A[Python App] --> B[Docker Build]
+        B --> C[Push to GHCR]
+        style A fill:#90EE90
+        style B fill:#87CEEB
+        style C fill:#FFB6C1
     end
 
-    subgraph "Application Layer"
-        APP --> POD[Flask App Pod]
-        POD --> SEC[Registry Secret]
-        style APP fill:#90EE90
-        style POD fill:#90EE90
-        style SEC fill:#FFB6C1
+    subgraph "CD Process (Self-Hosted Runner)"
+        D[Pull from GHCR] --> E[Helm Deploy]
+        style D fill:#DDA0DD
+        style E fill:#F0E68C
     end
 
-    subgraph "Database Layer"
-        POD --> MYSQL[Bitnami MySQL]
-        MYSQL --> CONF[Init ConfigMap]
-        MYSQL --> S1[Root Password Secret]
-        MYSQL --> S2[User Credentials Secret]
-        style MYSQL fill:#DDA0DD
-        style CONF fill:#F0E68C
-        style S1 fill:#FFB6C1
-        style S2 fill:#FFB6C1
+    subgraph "Application Stack"
+        F[LoadBalancer] --> G[Flask App Service]
+        G --> H[Flask App Pod]
+        H --> I[MySQL Service]
+        I --> J[Bitnami MySQL]
+        J --> K[Init ConfigMap]
+        style F fill:#98FB98
+        style G fill:#B8860B
+        style H fill:#90EE90
+        style I fill:#87CEEB
+        style J fill:#FFB6C1
+        style K fill:#DDA0DD
     end
 
-    subgraph "Storage Layer"
-        MYSQL --> PV[Persistent Volume]
-        style PV fill:#98FB98
+    subgraph "Secrets & Configuration"
+        L[Registry Secret]
+        M[MySQL Root Secret]
+        N[MySQL User Secret]
+        style L fill:#FFA07A
+        style M fill:#FFA07A
+        style N fill:#FFA07A
     end
+
+    C --> D
+    E --> G
+    H --> L
+    J --> M
+    J --> N
 ```
 
 # MySQL Configuration and User Permissions
