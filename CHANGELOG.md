@@ -1,3 +1,20 @@
+## 2.0.0 (2024-11-23)
+
+### BREAKING CHANGE
+
+- this version is the first for this app
+- this version is the first for this app
+- this version is the first for this app
+
+### Feat
+
+- add cz commite to the repo and create a new relese to dvir-app
+- add cz commite to the repo and create a new relese to dvir-app
+- add cz commite to the repo
+- implement cz commit config and semntic version
+- implement cz commit config and semntic version
+- implement cz commit config and semntic version
+
 ## 1.0.0 (2024-11-23)
 
 ### BREAKING CHANGE
