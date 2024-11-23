@@ -8,7 +8,7 @@ env:
   IMAGE_NAME: dvir-app
   REGISTRY: ghcr.io
 jobs:
-  build:  #part 1 build + push the image to ghcr
+  build:  #part 1 build + push  image to ghcr
     runs-on: ubuntu-latest
     permissions:
       contents: read
