@@ -5,7 +5,7 @@ on:
   pull_request:
     branches: [ "main" ]
 env:
-  IMAGE_NAME: dvir-demo
+  IMAGE_NAME: dvir-app
   REGISTRY: ghcr.io
 jobs:
   build:  #part 1 build + push image to ghcr
