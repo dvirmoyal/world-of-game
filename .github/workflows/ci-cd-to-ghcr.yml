@@ -1,12 +1,11 @@
 name: PythonApp-CI
 on:
   push:
-    branches: [ "master" ]
+    branches: [ "main" ]
   pull_request:
-    branches: [ "master" ]
+    branches: [ "main" ]
 env:
   IMAGE_NAME: dvir-demo
-  IMAGE_TAG: ${{ github.sha }}
   REGISTRY: ghcr.io
 jobs:
   build:  #part 1 build + push image to ghcr
@@ -17,57 +16,68 @@ jobs:
     steps:
     - name: Checkout the source code
       uses: actions/checkout@v3
-    - name: Set Up Python Environment
-      uses: actions/setup-python@v3
-      with:
-        python-version: '3.x'
-    - name: Install application Dependencies
+
+    - name: Configure Git
       run: |
-        python -m pip install --upgrade pip
-        pip install coverage flake8
-        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+        git config --global user.email "dvirmoyal25@gmail.com"
+        git config --global user.name "dvir_moyal"
+
+    - name: Install Commitizen
+      run: |
+        pip install commitizen
+
+    - name: Bump version and create changelog
+      id: bump
+      run: |
+        cz bump --yes
+        VERSION=$(git describe --tags --abbrev=0)
+        echo "VERSION=${VERSION}" >> $GITHUB_ENV
+
+
+    - name: Debug VERSION
+      run: echo "VERSION=${{ env.VERSION }}"
+
+
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v2
+
+
     - name: Login to GitHub Container Registry #step 2 push image
       uses: docker/login-action@v2
       with:
         registry: ghcr.io
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
+
     - name: Build and push Docker image
       uses: docker/build-push-action@v4
       with:
         context: .
         push: true
-        tags: |  #add the right tag to image 
+        tags: |
           ghcr.io/${{ github.repository_owner }}/${{ env.IMAGE_NAME }}:latest
-          ghcr.io/${{ github.repository_owner }}/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}
+          ghcr.io/${{ github.repository_owner }}/${{ env.IMAGE_NAME }}:${{ env.VERSION }}
         labels: |
           org.opencontainers.image.source=${{ github.server_url }}/${{ github.repository }}
           org.opencontainers.image.revision=${{ github.sha }}
-    - name: Create Release
-      id: create_release
+
+    - name: Create GitHub Release
       uses: actions/create-release@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.PAT_GHCR }}
       with:
-        tag_name: v${{ github.run_number }}
-        release_name: Release ${{ github.run_number }}
+        tag_name: ${{ env.VERSION }}
+        release_name: Release ${{ env.VERSION }}
         body: |
-          Changes in this Release:
-          - Docker image built and pushed to GHCR
-          - Image tag: ${{ env.IMAGE_TAG }}
+          **Docker Image:**
+          - Name: `${{ env.IMAGE_NAME }}`
+          - Tags:
+            - `latest`
+            - `${{ env.VERSION }}`
         draft: false
-        prerelease: false
-    - name: Release Result
-      if: success()
-      run: |
-        echo "Release created successfully!"
-        echo "Release URL: ${{ steps.create_release.outputs.html_url }}"
-    - name: Release Error
-      if: failure()
-      run: |
-        echo "Failed to create release"
+        prerelease: false # Mark this release as a prerelease
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+
   use-image:  #part 2 pull image frome ghcr to jfrog artifactory
     needs: build
     runs-on: ubuntu-latest
@@ -83,7 +93,7 @@ jobs:
         password: ${{ secrets.GITHUB_TOKEN }}
     - name: Pull Docker image from GHCR
       run: |
-        docker pull ${{ env.REGISTRY }}/${{ github.repository_owner }}/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}
+         run: docker pull ${{ env.REGISTRY }}/${{ github.repository_owner }}/${{ env.IMAGE_NAME }}:${{ env.VERSION }}
     - name: Setup JFrog CLI
       uses: jfrog/setup-jfrog-cli@v3
       env:
@@ -92,9 +102,9 @@ jobs:
         JF_PASSWORD: ${{ secrets.JFROG_PASSWORD }}
     - name: Retag Docker image
       run: |
-       docker tag ghcr.io/dvirmoyal/dvir-demo:${{ env.IMAGE_TAG }} dvirmoyal.jfrog.io/dvir-moyal-demo-docker/dvir-demo:${{ env.IMAGE_TAG }}
+       docker tag ghcr.io/dvirmoyal/dvir-demo:${{ env.IMAGE_TAG }} dvirmoyal.jfrog.io/dvir-moyal-demo-docker/dvir-demo:${{ env.VERSION }}
 
     - name: Push Docker image to Artifactory
       run: |
-       jf docker push dvirmoyal.jfrog.io/dvir-moyal-demo-docker/dvir-demo:${{ env.IMAGE_TAG }}
+       jf docker push dvirmoyal.jfrog.io/dvir-moyal-demo-docker/dvir-demo:${{ env.VERSION }}
 
