@@ -4,5 +4,3 @@ tag_format = "$version"
 version_scheme = "semver"
 version_provider = "scm"
 update_changelog_on_bump = true
-changelog_file = "CHANGELOG.md"
-changelog_start_rev = "0.0.0"

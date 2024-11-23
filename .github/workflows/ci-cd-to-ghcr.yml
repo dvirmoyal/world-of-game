@@ -8,7 +8,7 @@ env:
   IMAGE_NAME: dvir-app
   REGISTRY: ghcr.io
 jobs:
-  build:  #part 1 build + push  image to ghcr
+  build:  #part 1 build + push image to ghcr
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -21,19 +21,15 @@ jobs:
       run: |
         git config --global user.email "dvirmoyal25@gmail.com"
         git config --global user.name "dvir_moyal"
-
     - name: Install Commitizen
       run: |
         pip install commitizen
-
     - name: Bump version and create changelog
       id: bump
       run: |
         cz bump --yes
         VERSION=$(git describe --tags --abbrev=0)
         echo "VERSION=${VERSION}" >> $GITHUB_ENV
-
-
     - name: Debug VERSION
       run: echo "VERSION=${{ env.VERSION }}"
 
@@ -60,7 +56,6 @@ jobs:
         labels: |
           org.opencontainers.image.source=${{ github.server_url }}/${{ github.repository }}
           org.opencontainers.image.revision=${{ github.sha }}
-
     - name: Create GitHub Release
       uses: actions/create-release@v1
       with:
@@ -103,7 +98,6 @@ jobs:
     - name: Retag Docker image
       run: |
        docker tag ghcr.io/dvirmoyal/dvir-demo:${{ env.IMAGE_TAG }} dvirmoyal.jfrog.io/dvir-moyal-demo-docker/dvir-demo:${{ env.VERSION }}
-
     - name: Push Docker image to Artifactory
       run: |
        jf docker push dvirmoyal.jfrog.io/dvir-moyal-demo-docker/dvir-demo:${{ env.VERSION }}
