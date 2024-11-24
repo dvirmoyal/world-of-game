@@ -75,7 +75,19 @@ graph LR
     style D fill:#4B0082
     style E fill:#2F4F4F
 ```
-
+### Continuous Deployment Flow
+```mermaid
+graph LR
+    A[GitHub Action] -->|Updates| B[dvir-cd Values.yaml]
+    B -->|New Image Tag| C[Git Repository]
+    C -->|Detects Change| D[ArgoCD]
+    D -->|Auto Sync| E[K8s Cluster]
+    style A fill:#006400
+    style B fill:#00008B
+    style C fill:#8B0000
+    style D fill:#4B0082
+    style E fill:#2F4F4F
+```
 ### Database Integration Flow
 ```mermaid
 graph LR
@@ -98,9 +110,8 @@ graph LR
 │   ├── main.py              # Main application code
 │   └── vault_config.py      # Vault integration configuration
 ├── helm/
-│   └── my-chart/           # Helm chart for application deployment
+│   └── my-chart/my-app-prod         # Helm chart for application deployment
 ├── k8s/
-│   ├── vault/              # Vault configuration files
 │   └── app/                # Application manifests
 └── README.md
 ```

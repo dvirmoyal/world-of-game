@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="he">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>World of Games</title>
+</head>
+<body>
+    <h1>ברוכים הבאים לעולם המשחקים</h1>
+    <a href="{{ url_for('welcome_page') }}">התחל</a>
+</body>
+</html>
+
+<!-- templates/welcome.html -->
+<!DOCTYPE html>
+<html lang="he">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ברוכים הבאים</title>
+</head>
+<body>
+    <h1>ברוכים הבאים</h1>
+    {% if message %}
+        <p>{{ message }}</p>
+        <a href="{{ url_for('game_page') }}">בחר משחק</a>
+    {% else %}
+        <form method="post">
+            <label for="name">מה שמך?</label>
+            <input type="text" id="name" name="name" required>
+            <button type="submit">שלח</button>
+        </form>
+    {% endif %}
+</body>
+</html>
+
+<!-- templates/game.html -->
+<!DOCTYPE html>
+<html lang="he">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>בחר משחק</title>
+</head>
+<body>
+    <h1>בחר משחק</h1>
+    <form method="post">
+        {% for i in range(games|length) %}
+            <input type="radio" id="game{{ i+1 }}" name="game" value="{{ i+1 }}" required>
+            <label for="game{{ i+1 }}">{{ games[i] }}</label><br>
+        {% endfor %}
+        <br>
+        <label for="difficulty">בחר רמת קושי (1-5):</label>
+        <input type="number" id="difficulty" name="difficulty" min="1" max="5" required>
+        <br><br>
+        <button type="submit">שחק</button>
+    </form>
+</body>
+</html>
