@@ -137,34 +137,6 @@ jobs:
            $latestPackage = Get-ChildItem -Filter my-chart-*.tgz | Sort-Object LastWriteTime -Descending | Select-Object -First 1
            Write-Output "Latest package created: $($latestPackage.Name)"
 
-
-      - name: Update Helm values
-        shell: powershell
-        run: |  
-           cd C:\Users\USER\PycharmProjects\dvir-demo-ci-cd\my-chart
-           
-           $imageRepository = "$env:REGISTRY/$env:REPO_OWNER/$env:IMAGE_NAME"
-           
-           helm template my-app ./ --debug `
-             --set image.repository=$imageRepository `
-             --set image.tag=$env:IMAGE_TAG `
-             --set replicaCount=2 `
-             --set nameOverride=world-of-games `
-             --set namespace=dvir-app
-           
-           helm upgrade -i my-app ./ --debug `
-             --set image.repository=$imageRepository `
-             --set image.tag=$env:IMAGE_TAG `
-             --set replicaCount=2 `
-             --set nameOverride=world-of-games `
-             --set namespace=dvir-app
-           
-           cd ../
-           helm package my-chart
-           $latestPackage = Get-ChildItem -Filter my-chart-*.tgz | Sort-Object LastWriteTime -Descending | Select-Object -First 1
-           Write-Output "Latest package created: $($latestPackage.Name)"
-
            # Verify the deployment
            kubectl get pods -n dvir-app
            kubectl get services -n dvir-app
-
