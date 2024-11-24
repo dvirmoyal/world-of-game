@@ -1,16 +1,20 @@
+
 # World of Games - Flask Application
 
 ## Project Overview
 A Flask-based gaming platform with MySQL database integration, containerized and deployed to Kubernetes using Helm. The application allows users to register, choose games, and track player activities.
 
+
 ## Architecture Flow
 ```mermaid
 graph LR;
     subgraph "CI Process (Cloud Runner)"
+
         A[Flask App] --> B[Dependencies]
         B --> C[Docker Build]
         C --> D[Push to GHCR]
         
+
         style A fill:#90EE90
         style B fill:#87CEEB
         style C fill:#FFB6C1
@@ -18,6 +22,7 @@ graph LR;
     end
 
     subgraph "CD Process (Self-Hosted Runner)"
+
         E[Pull from GHCR] --> F[Helm Deploy]
         F --> G[K8s Cluster]
         G --> H[App Pod]
@@ -28,6 +33,7 @@ graph LR;
         style G fill:#98FB98
         style H fill:#DDA0DD
         style I fill:#B8860B
+
     end
 
     D --> E
@@ -179,3 +185,5 @@ curl http://<service-ip>/test_db_connection
 - Add high score system
 - Enhance database schema
 - Add monitoring and metrics
+
+
