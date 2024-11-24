@@ -1,6 +1,10 @@
+
 # Overall System Architecture
 
+
+## Architecture Flow
 ```mermaid
+
 graph TB
     subgraph "CI Process (Cloud Runner)"
         A[Python App] --> B[Docker Build]
