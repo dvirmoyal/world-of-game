@@ -1,15 +1,15 @@
 name: PythonApp-CI
 on:
   push:
-    branches: ["master"]
+    branches: ["develop"] #the branche to be trigger
   pull_request:
-    branches: ["master"]
-env:
+    branches: ["develop"]
+env: #set the env
   IMAGE_NAME: dvir-demo
   IMAGE_TAG: ${{ github.sha }}
   REGISTRY: ghcr.io
 jobs:
-  build:
+  build:  #first step create the image of the app run on virtal env CI
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -69,7 +69,7 @@ jobs:
         run: |
           echo "Failed to create release"
   use-image:
-    needs: build
+    needs: build  # step 2 the cd take the image and deploy with helm chrt
     runs-on: self-hosted
     permissions:
       contents: read
@@ -97,7 +97,7 @@ jobs:
           echo "Kubeconfig:"
           kubectl config view --minify
       - name: Set PowerShell Environment Variables
-        shell: powershell
+        shell: powershell  #set the right env from the virtael env "CI"
         run: |
           $env:REGISTRY = "${{ env.REGISTRY }}"
           $env:REPO_OWNER = "${{ github.repository_owner }}"
@@ -110,27 +110,21 @@ jobs:
           echo "IMAGE_NAME: $env:IMAGE_NAME"
           echo "IMAGE_TAG: $env:IMAGE_TAG"
 
-
       - name: Update Helm values
         shell: powershell
         run: |  
-           cd C:\Users\USER\PycharmProjects\dvir-demo-ci-cd\my-chart
+           cd C:\Users\USER\PycharmProjects\demo-ci-cd\my-chart
            
            $imageRepository = "$env:REGISTRY/$env:REPO_OWNER/$env:IMAGE_NAME"
            
-           helm template my-app ./ --debug `
-             --set image.repository=$imageRepository `
+           #downlod the depenc
+           helm dependency update .  
+           helm upgrade -i my-app-dev ./ --namespace dvir-app --debug -f values-dev.yaml `
+             --set image.repository=ghcr.io/dvirmoyal/dvir-demo `
              --set image.tag=$env:IMAGE_TAG `
-             --set replicaCount=2 `
+             --set replicaCount=1 `
              --set nameOverride=world-of-games `
-             --set namespace=dvir-app
-           
-           helm upgrade -i my-app ./ --debug `
-             --set image.repository=$imageRepository `
-             --set image.tag=$env:IMAGE_TAG `
-             --set replicaCount=2 `
-             --set nameOverride=world-of-games `
-             --set namespace=dvir-app
+             
            
            cd ../
            helm package my-chart

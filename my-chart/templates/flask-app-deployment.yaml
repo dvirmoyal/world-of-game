@@ -21,28 +21,24 @@ spec:
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           env:
-
             - name: MYSQL_HOST
-              value: "my-app-mysql.dvir-app.svc.cluster.local"
+              value: "my-app-dev-mysql.dvir-app.svc.cluster.local"
             - name: MYSQL_USER
-
               valueFrom:
                 secretKeyRef:
-                  name: {{ .Release.Name }}-mysql-username
+                  name: {{ .Release.Name }}-mysql-username-dev
                   key: username
-
             - name: MYSQL_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: {{ .Release.Name }}-mysql-password
+                  name: {{ .Release.Name }}-mysql-password-dev
                   key: password
             - name: MYSQL_ROOT_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: {{ .Release.Name }}-mysql-root-password
+                  name: {{ .Release.Name }}-mysql-root-password-dev
                   key: password
             - name: MYSQL_DATABASE
               value: "world-of-game"
             - name: MYSQL_PORT
               value: "3306"
-
