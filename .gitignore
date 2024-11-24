@@ -1,0 +1,16 @@
+# Ignore node_modules directory
+node_modules/
+
+# Ignore venv directory (Python virtual environment)
+venv/
+
+/venv
+
+# Ignore npm lock file
+package-lock.json
+
+# Ignore any log files
+*.log
+
+# Ignore .env files (if applicable)
+.env

@@ -139,3 +139,4 @@ jobs:
            # Verify the deployment
            kubectl get pods -n dvir-app
            kubectl get services -n dvir-app
+
