@@ -204,8 +204,7 @@ kubectl apply -f sealed-secrets/
 kubectl get pods -n dvir-app
 ```
 
-## Contributing
-[Previous contributing guidelines remain the same...]
+
 
 ---
 
