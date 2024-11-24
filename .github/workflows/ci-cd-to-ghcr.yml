@@ -89,14 +89,15 @@ jobs:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
     - name: Pull Docker image from GHCR
-      run: |
-         run: docker pull ${{ env.REGISTRY }}/${{ github.repository_owner }}/${{ env.IMAGE_NAME }}:${{ env.VERSION }}
+      run: docker pull ${{ env.REGISTRY }}/${{ github.repository_owner }}/${{ env.IMAGE_NAME }}:${{ env.VERSION }}
+
     - name: Setup JFrog CLI
       uses: jfrog/setup-jfrog-cli@v3
       env:
         JF_URL: https://dvirmoyal.jfrog.io
         JF_USER: ${{ secrets.JFROG_USER }}
         JF_PASSWORD: ${{ secrets.JFROG_PASSWORD }}
+
     - name: Retag Docker image
       run: |
        docker tag ghcr.io/dvirmoyal/dvir-demo:${{ env.IMAGE_TAG }} dvirmoyal.jfrog.io/dvir-moyal-demo-docker/dvir-demo:${{ env.VERSION }}
