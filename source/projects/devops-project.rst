@@ -38,12 +38,12 @@ The CI/CD pipeline was designed to enable seamless deployments and version manag
 CI/CD Architecture
 -------------------
 
-.. figure:: ../_static/ci-cd-arch.png
+.. figure:: ../_static/ci-cd-diagram.png
    :align: center
-   :alt: CI/CD Pipeline Architecture
+   :alt: CI/CD Diagram
    :width: 600px
 
-   CI/CD Pipeline Architecture with GitOps
+
 
 Workflow Steps
 --------------

@@ -10,8 +10,9 @@ DevOps & AWS Portfolio
 Welcome to my technical portfolio! Here you'll find detailed documentation of my projects in DevOps and AWS Cloud Architecture.
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 1
    :caption: Navigation
+   :hidden:
 
    projects/devops-project
    projects/aws-architecture
@@ -21,9 +22,9 @@ Welcome to my technical portfolio! Here you'll find detailed documentation of my
 CI/CD Pipeline with Kubernetes
 -----------------------------
 
-.. figure:: _static/ci-cd-arch.png
+.. figure:: _static/ci-cd-diagram.png
    :align: center
-   :alt: CI/CD Architecture Diagram
+   :alt: CI/CD Diagram
    :width: 600px
 
    **Enterprise CI/CD Pipeline with GitOps Methodology**
@@ -38,10 +39,26 @@ An advanced DevOps implementation showcasing:
 6. **Infrastructure as Code** with Terraform on AWS
 7. **Kubernetes Cluster Orchestration** and management
 
-`Read Full Technical Details » <projects/devops-project.html>`_
+This flexible CI/CD pipeline has also been successfully implemented for a **Java-based application**, proving its adaptability to various programming languages and environments.
+
+- Java CI process repository: `Java CI Repository <https://github.com/dvirmoyal/dvir-java-app-ci.git>`_
+- Java CD process repository: `Java CD Repository <https://github.com/dvirmoyal/java-app-cd.git>`_
+
+For detailed explanations and full code, please visit the main repository:
+`World of Game Repository <https://github.com/dvirmoyal/world-of-game.git>`_
+
+`Read Full Technical Details - CI/CD » <projects/devops-project.html>`_
+
+
 
 AWS Cloud Architecture
 ----------------------
+
+.. figure:: _static/aws-architecture-diagram.png
+   :align: center
+   :alt: AWS Architecture Diagram
+   :width: 600px
+
 
 An advanced AWS cloud architecture implementation showcasing:
 
@@ -58,5 +75,6 @@ An advanced AWS cloud architecture implementation showcasing:
    - The new images update the Launch Template of the ASG, enabling automated updates to the environment.
    - A creative and advanced solution to ensure rapid upgrades and stabilization of the environment.
 
-`Read Full Technical Details » <projects/aws-architecture.html>`_
+`Read Full Technical Details - AWS » <projects/aws-architecture.html>`_
+
 

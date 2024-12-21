@@ -31,7 +31,7 @@ Architecture Diagram
    :alt: AWS Architecture Diagram
    :width: 600px
 
-   AWS Architecture Diagram
+
 
 Workflow Steps
 --------------
@@ -58,8 +58,7 @@ Tools and Technologies
 - **Packer**
 - **CI/CD Pipelines**
 
-Next Steps
-----------
 
-- Explore the `CI/CD Pipeline Overview » <devops-project>`_.
+
+
 
