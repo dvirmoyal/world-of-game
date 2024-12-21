@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>CI/CD Pipeline with Kubernetes &#8212; dvir-Portfolio  documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=d1102ebc" />
+    <link rel="stylesheet" type="text/css" href="../_static/basic.css?v=686e5160" />
+    <link rel="stylesheet" type="text/css" href="../_static/alabaster.css?v=27fed22d" />
+    <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="AWS Cloud Architecture Overview" href="aws-architecture.html" />
+    <link rel="prev" title="DevOps &amp; AWS Portfolio" href="../index.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="ci-cd-pipeline-with-kubernetes">
+<h1>CI/CD Pipeline with Kubernetes<a class="headerlink" href="#ci-cd-pipeline-with-kubernetes" title="Link to this heading">¶</a></h1>
+<p>This page provides a detailed explanation of the CI/CD pipeline implementation using Kubernetes, GitOps methodology, and other modern DevOps tools.</p>
+<section id="overview">
+<h2>Overview<a class="headerlink" href="#overview" title="Link to this heading">¶</a></h2>
+<p>The CI/CD pipeline was designed to enable seamless deployments and version management in a Kubernetes environment.</p>
+<p><strong>Key Features:</strong></p>
+<ol class="arabic simple">
+<li><p><strong>Semantic Versioning:</strong>
+- Automatically assigns a version to Docker images based on <cite>Conventional Commits</cite> rules.
+- Integrates with GitHub Actions for building, testing, and releasing artifacts.</p></li>
+<li><p><strong>GitOps Deployments:</strong>
+- Uses <strong>ArgoCD</strong> for declarative GitOps-based deployments.
+- Automatically updates Kubernetes deployments with the latest Docker image tags using <strong>ArgoCD Image Updater</strong>.</p></li>
+<li><p><strong>HELM Chart Management:</strong>
+- Streamlines the deployment of Kubernetes applications.
+- Separates configuration from application code for modularity and flexibility.</p></li>
+<li><p><strong>Secrets Management with Vault:</strong>
+- Stores and injects application secrets securely using HashiCorp Vault.
+- Automates secrets retrieval using Kubernetes authentication.</p></li>
+<li><p><strong>Monitoring and Logging:</strong>
+- Implements centralized monitoring with <strong>Grafana</strong> and <strong>Prometheus</strong>.
+- Leverages <strong>AWS CloudWatch</strong> for real-time logs and metrics.</p></li>
+<li><p><strong>Infrastructure as Code:</strong>
+- Deploys AWS resources (e.g., EC2, S3, RDS) using <strong>Terraform</strong>.
+- Ensures consistency and repeatability in infrastructure provisioning.</p></li>
+</ol>
+</section>
+<section id="ci-cd-architecture">
+<h2>CI/CD Architecture<a class="headerlink" href="#ci-cd-architecture" title="Link to this heading">¶</a></h2>
+<figure class="align-center" id="id1">
+<a class="reference internal image-reference" href="../_images/ci-cd-arch.png"><img alt="CI/CD Pipeline Architecture" src="../_images/ci-cd-arch.png" style="width: 600px;" />
+</a>
+<figcaption>
+<p><span class="caption-text">CI/CD Pipeline Architecture with GitOps</span><a class="headerlink" href="#id1" title="Link to this image">¶</a></p>
+</figcaption>
+</figure>
+</section>
+<section id="workflow-steps">
+<h2>Workflow Steps<a class="headerlink" href="#workflow-steps" title="Link to this heading">¶</a></h2>
+<ol class="arabic simple">
+<li><p><strong>Code Commit:</strong>
+- Developers push code changes to a Git repository following the <cite>Conventional Commits</cite> standard.</p></li>
+<li><p><strong>GitHub Actions Build Pipeline:</strong>
+- Triggers automated builds and tests.
+- Generates a Docker image tagged with a semantic version.</p></li>
+<li><p><strong>Pushing Docker Images:</strong>
+- Docker images are pushed to a container registry (e.g., <strong>GitHub Container Registry</strong>).</p></li>
+<li><p><strong>ArgoCD Sync:</strong>
+- ArgoCD syncs the updated Helm charts and applies changes to the Kubernetes cluster.</p></li>
+<li><p><strong>Application Deployment:</strong>
+- Kubernetes applies the updated configuration and restarts pods as needed.</p></li>
+</ol>
+</section>
+<section id="tools-and-technologies">
+<h2>Tools and Technologies<a class="headerlink" href="#tools-and-technologies" title="Link to this heading">¶</a></h2>
+<p><strong>CI/CD Tools:</strong>
+- GitHub Actions
+- ArgoCD
+- ArgoCD Image Updater</p>
+<p><strong>Kubernetes Tools:</strong>
+- HELM
+- HashiCorp Vault
+- kubectl</p>
+<p><strong>Monitoring and Logging:</strong>
+- Grafana
+- Prometheus
+- AWS CloudWatch</p>
+<p><strong>Infrastructure as Code:</strong>
+- Terraform
+- AWS Services (EC2, S3, CloudFront)</p>
+</section>
+<section id="next-steps">
+<h2>Next Steps<a class="headerlink" href="#next-steps" title="Link to this heading">¶</a></h2>
+<p>To dive deeper into the implementation, see the following sections:
+- <a class="reference external" href="aws-architecture.html">Read about AWS Cloud Architecture »</a></p>
+</section>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">dvir-Portfolio</a></h1>
+
+
+
+
+
+
+
+
+
+<search id="searchbox" style="display: none" role="search">
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="Search"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script><h3>Navigation</h3>
+<p class="caption" role="heading"><span class="caption-text">Navigation</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">CI/CD Pipeline with Kubernetes</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#overview">Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#ci-cd-architecture">CI/CD Architecture</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#workflow-steps">Workflow Steps</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#tools-and-technologies">Tools and Technologies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#next-steps">Next Steps</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="aws-architecture.html">AWS Cloud Architecture Overview</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="../index.html" title="previous chapter">DevOps &amp; AWS Portfolio</a></li>
+      <li>Next: <a href="aws-architecture.html" title="next chapter">AWS Cloud Architecture Overview</a></li>
+  </ul></li>
+</ul>
+</div>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &#169;2024, dvir-moyal.
+      
+      |
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 8.1.3</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 1.0.0</a>
+      
+      |
+      <a href="../_sources/projects/devops-project.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
