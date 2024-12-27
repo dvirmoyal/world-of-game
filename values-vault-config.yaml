@@ -1,0 +1,35 @@
+=server:
+ affinity: ""
+ ha:
+   enabled: true    # Enables High Availability mode
+   raft:
+     enabled: true  # Enables Raft storage backend
+     setNodeId: true # Automatically sets unique node IDs
+     config: |
+       # Cluster name for Raft integrated storage
+       cluster_name = "vault-integrated-storage"
+
+       # Raft storage configuration
+       storage "raft" {
+         path    = "/vault/data/"  # Path for storing Raft data
+       }
+
+       # Network listener configuration
+       listener "tcp" {
+         address = "[::]:8200"          # API endpoint address
+         cluster_address = "[::]:8201"   # HA cluster communication address
+         tls_disable = "true"           # WARNING: Enable TLS in production
+       }
+
+       # AWS KMS auto-unseal configuration
+       seal "awskms" {
+         region     = "us-east-1"
+         kms_key_id = "arn:aws:kms:us-east-1:041001457071:key/957d8938-5408-4a7b-bc46-80ee4cbde4f4"
+         # Required IAM permissions:
+         # - kms:Encrypt
+         # - kms:Decrypt
+         # - kms:DescribeKey
+       }
+
+       # Kubernetes service registration for auto-discovery
+       service_registration "kubernetes" {}
