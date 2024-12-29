@@ -296,7 +296,7 @@ kubectl exec -it vault-0 -- vault status
 kubectl logs -f deployment/webapp
 ```
 
-## Security Considerations
+## Security Considerations   
 
 - Regularly rotate AWS credentials and Vault root tokens
 - Monitor Vault audit logs for unauthorized access attempts

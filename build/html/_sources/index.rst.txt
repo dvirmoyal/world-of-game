@@ -54,7 +54,7 @@ For detailed explanations and full code, please visit the main repository:
 AWS Cloud Architecture
 ----------------------
 
-.. figure:: _static/aws-architecture-diagram.png
+.. figure:: _static/aws.png
    :align: center
    :alt: AWS Architecture Diagram
    :width: 600px

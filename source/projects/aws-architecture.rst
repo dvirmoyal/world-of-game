@@ -26,7 +26,7 @@ The architecture is designed to deliver high scalability, security, and performa
 Architecture Diagram
 --------------------
 
-.. figure:: ../_static/aws-architecture-diagram.png
+.. figure:: ../_static/aws.png
    :align: center
    :alt: AWS Architecture Diagram
    :width: 600px
